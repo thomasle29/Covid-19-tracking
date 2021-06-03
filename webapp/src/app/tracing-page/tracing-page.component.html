@@ -1,0 +1,16 @@
+<mat-form-field class="field-f0-id">
+    <mat-label>Input FO id</mat-label>
+    <input matInput [formControl]="f0ID" required>
+    <mat-error *ngIf="f0ID.invalid">{{getErrorMessageF0ID()}}</mat-error>
+    <button mat-button *ngIf="f0ID.value" matSuffix mat-icon-button aria-label="Clear" (click)="f0ID.setValue('')">
+        <mat-icon>close</mat-icon>
+    </button>
+</mat-form-field>
+
+<mat-form-field class="field-number-of-f">
+    <mat-label>Number of (F)</mat-label>
+    <input matInput type="number" [formControl]="fNumber" required>
+    <mat-error *ngIf="fNumber.invalid">{{getErrorMessageFNumber()}}</mat-error>
+</mat-form-field>
+
+<button mat-raised-button color="primary">GO</button>
