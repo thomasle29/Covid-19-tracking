@@ -18,16 +18,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 // import { FormControl, Validators } from '@angular/forms';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { HttpClientModule } from '@angular/common/http';
+import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 
 import { InforPageComponent } from './infor-page/infor-page.component';
 
 const appRoutes: Routes = [
   {path: 'tracing-page', component: TracingPageComponent},
   {path: 'info-page', component: InforPageComponent},
-  {path: '**', redirectTo: '/heroes-list', pathMatch: 'full'}
+  {path: '**', redirectTo: '/info-page', pathMatch: 'full'}
 ];
 
 @NgModule({
@@ -40,6 +46,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(
       appRoutes,
@@ -55,9 +62,17 @@ const appRoutes: Routes = [
     MatTableModule,
     NgxGraphModule,
     MatFormFieldModule,
-    BrowserAnimationsModule
+    MatDividerModule,
+    MatListModule,
+    MatPaginatorModule,
+    SnotifyModule,
+    BrowserAnimationsModule,
+    ClipboardModule
   ],
-  providers: [],
+  providers: [
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults },
+    SnotifyService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

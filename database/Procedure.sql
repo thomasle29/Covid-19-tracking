@@ -27,7 +27,7 @@ BEGIN
 			ITERATE while_loop;
 		END IF;
         
-        SET @timestamp_from =  UNIX_TIMESTAMP(CURRENT_TIMESTAMP) - param_number_of_day * 24 * 60 * 60;
+        SET @timestamp_from =  UNIX_TIMESTAMP(CURRENT_TIMESTAMP) - (param_number_of_day * 24 * 60 * 60);
         SET @timestamp_to = UNIX_TIMESTAMP(CURRENT_TIMESTAMP);
     
 		INSERT INTO covid_19_db.relative (relative_ID, relative_from, relative_to, `timestamp`) 
@@ -35,7 +35,7 @@ BEGIN
 				UUID(),
 				@infor_from,
 				@infor_to,
-				(FLOOR(RAND() *(@timestamp_to-@timestamp_from+1))+@timestamp_to)
+				(FLOOR(RAND() *(@timestamp_to-@timestamp_from+1)+@timestamp_from))
 		);
             
 		SET counter = counter + 1;
@@ -52,5 +52,34 @@ DROP PROCEDURE IF EXISTS covid_19_db.select_meeting_table //
 CREATE PROCEDURE covid_19_db.select_meeting_table()
 BEGIN
 	SELECT relative_ID, relative_A, relative_B, timestamp FROM CSD.relative;
-END;
+END //
 
+DROP PROCEDURE IF EXISTS covid_19_db.get_relative_by_time //
+CREATE PROCEDURE covid_19_db.get_relative_by_time(
+	IN param_number_of_date INT
+)
+BEGIN
+	SELECT r.relative_from, r.relative_to 
+    FROM covid_19_db.relative r
+	WHERE r.`timestamp` > (UNIX_TIMESTAMP(CURRENT_TIME()) - (param_number_of_date * 24 * 60 * 60));
+END //
+
+-- SELECT INFROMATION IN A NUMBER OF DAYS
+DROP PROCEDURE IF EXISTS covid_19_db.get_info_person_by_date //
+CREATE PROCEDURE covid_19_db.get_info_person_by_date (
+    IN param_number_of_day INT
+)
+BEGIN
+	SELECT DISTINCT r.relative_from, i.infor_name, i.infor_phone, i.infor_address, i.infor_year
+	FROM covid_19_db.relative r
+	INNER JOIN covid_19_db.infor i
+		ON r.relative_from = i.infor_ID
+	WHERE UNIX_TIMESTAMP(CURRENT_TIMESTAMP) - r.`timestamp` < param_number_of_day * 24 * 60 * 60
+	UNION
+	SELECT DISTINCT r.relative_to, i.infor_name, i.infor_phone, i.infor_address, i.infor_year
+	FROM covid_19_db.relative r
+	INNER JOIN covid_19_db.infor i
+		ON r.relative_to =  i.infor_ID
+	WHERE UNIX_TIMESTAMP(CURRENT_TIMESTAMP) - r.`timestamp` < param_number_of_day * 24 * 60 * 60
+	ORDER BY infor_name;
+END //

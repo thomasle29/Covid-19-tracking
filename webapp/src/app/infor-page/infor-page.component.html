@@ -1,40 +1,87 @@
-<button mat-raised-button color="primary">Load All</button>
-
-
-<mat-form-field>
-    <mat-label>Search</mat-label>
-    <input matInput type="text" [(ngModel)]="value">
-    <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
-      <mat-icon>close</mat-icon>
-    </button>
+<mat-form-field class="field-number-of-date">
+    <mat-label>Number of date</mat-label>
+    <input matInput type="number" [formControl]="numberOfDate" required>
+    <mat-error *ngIf="numberOfDate.invalid">{{getErrorMessageNumberOfDate()}}</mat-error>
 </mat-form-field>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<button (click)="refreshReport()" mat-raised-button color="primary">Load</button>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef> No. </th>
-        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-    </ng-container>
+<mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+</mat-form-field>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+<div class="table-container">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef> Phone </th>
-        <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
-    </ng-container>
+        <!-- <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayRow">
+        <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+        <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+    </ng-container> -->
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="birthyear">
-        <th mat-header-cell *matHeaderCellDef> Birthyear </th>
-        <td mat-cell *matCellDef="let element"> {{element.birthyear}} </td>
-    </ng-container>
+        <ng-container matColumnDef="personName">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.personName}} </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+        <ng-container matColumnDef="personPhone">
+            <th mat-header-cell *matHeaderCellDef> Phone </th>
+            <td mat-cell *matCellDef="let element"> {{element.personPhone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="personAddress">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.personAddress}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="personYear">
+            <th mat-header-cell *matHeaderCellDef> BirdYear </th>
+            <td mat-cell *matCellDef="let element"> {{element.personYear}} </td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayRow.length">
+                <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <img class="element-user-image" src="assets/images/user_default.jpg">
+                    <mat-list>
+                        <mat-list-item>
+                            <span mat-subheader>ID</span>
+                            <span>{{element.personID}}</span> &nbsp;
+                            <button [cdkCopyToClipboard]="element.personID" mat-icon-button aria-label="Copy">
+                            <mat-icon>file_copy</mat-icon>
+                        </button>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Name</span>
+                            <span>{{element.personName}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Phone</span>
+                            <span>{{element.personPhone}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Address</span>
+                            <span>{{element.personAddress}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Birthyear</span>
+                            <span>{{element.personYear}}</span>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayRow"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayRow;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+
+    <!-- <mat-paginator [length]="100" [pageSize]="30"></mat-paginator> -->
+</div>
