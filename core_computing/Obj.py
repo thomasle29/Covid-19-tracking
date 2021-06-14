@@ -2,7 +2,7 @@ class Node:
     def __init__(self, id):
         self.id = id
     id = str()
-    edge = list()
+    edges = []
     before = str()
     visited = False
     filial = -1
