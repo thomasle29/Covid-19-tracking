@@ -37,9 +37,9 @@ func Get() *Config {
 	if len(instance.Database.Type) == 0 {
 		instance.Database.Type = "mysql"
 	}
-	instance.Database.Username = parseStringConfig("DATABASE_USERNAME", "thinhle")
-	instance.Database.Password = parseStringConfig("DATABASE_PASSWORD", "12345678")
-	instance.Database.Name = parseStringConfig("DATABASE_NAME", "access_gate_log")
+	instance.Database.Username = parseStringConfig("DATABASE_USERNAME", "root")
+	instance.Database.Password = parseStringConfig("DATABASE_PASSWORD", "!@#$%^&*()")
+	instance.Database.Name = parseStringConfig("DATABASE_NAME", "covid_19_db")
 	instance.Database.Address = parseStringConfig("DATABASE_ADDRESS", "127.0.0.1:3306")
 	instance.Database.MaxNumberConn = int(parseNumberConfig("DATABASE_MAX_CONNS", 20))
 	return instance

@@ -53,7 +53,7 @@ export class InforPageComponent implements OnInit {
   personLogInfo: PersonLogInfo[] = [];
   isLoading = false;
   errorMessage: string;
-  numberOfDate = new FormControl('5', [Validators.required, Validators.min(3)]);
+  numberOfDate = new FormControl('14', [Validators.required, Validators.min(3)]);
   columnsToDisplay: string[] = ['Name', 'Phone', 'Birthyear'];
   columnsToDisplayRow: string[] = ['personName', 'personPhone', 'personAddress', 'personYear'];
   expandedElement: PersonLogInfo | null;

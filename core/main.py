@@ -8,5 +8,4 @@ app = flask.Flask(config.SERVER_NAME)
 
 app = handler.setup(app)
 
-app.run(port=config.PORT)
-
+app.run(host="0.0.0.0", port=config.PORT)

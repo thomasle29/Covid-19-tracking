@@ -35,4 +35,13 @@ func Begin(port int32) error {
 
 func setup(router *gin.RouterGroup) {
 	router.GET("/ping", ping)
+
+	// Relative log
+	router.GET("relative/logs/:numberofdate", getListRelativeByTime)
+
+	// Person log
+	router.GET("person/logs/:numberofdate", getInfoPersonByDate)
+
+	// Tracking
+	router.GET("tracking", getTrackingGraph)
 }

@@ -10,6 +10,7 @@ export class TracingPageComponent implements OnInit {
 
   fNumber = new FormControl('', [Validators.required, Validators.min(3), Validators.max(10)]);
   f0ID = new FormControl('', [Validators.required]);
+  numberOfDate = new FormControl('', [Validators.required, Validators.min(3)]);
 
   getErrorMessageF0ID(){
     return this.f0ID.hasError('required') ? 'You must enter a value' : '';
@@ -25,6 +26,14 @@ export class TracingPageComponent implements OnInit {
     }
 
     return this.fNumber.hasError('max') ? 'You must enter a value between 3 and 10' : '';
+  }
+
+  getErrorMessageNumberOfDate() {
+    if (this.numberOfDate.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return this.numberOfDate.hasError('min') ? 'You must enter a value > 3' : '';
   }
 
   constructor() { }
