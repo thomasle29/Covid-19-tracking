@@ -14,8 +14,9 @@ def graphRelativeCompute():
         content = json.loads(flask.request.data)
         log = app.computeRelativeGraph(content)
 
-        if log != NULL:
+        if log != None:
             return message.buildMessage(log)
+            # return message.buildMessage("OK")
 
         return message.buildMessage("No result")
     except:
