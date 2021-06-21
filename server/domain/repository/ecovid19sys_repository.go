@@ -6,4 +6,5 @@ type ECovid19sysReporsitory interface {
 	// Covid19 db request
 	GetListRelativeByTime(numberOfDate int) (*entity.ItemRelativeLog, error)
 	GetInfoPersonByDate(numberOfDate int) ([]*entity.ItemPersonLog, error)
+	GetInfoPersonByID(personID string) (entity.ItemPersonLog, error)
 }

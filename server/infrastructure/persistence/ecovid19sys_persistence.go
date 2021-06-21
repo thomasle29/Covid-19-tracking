@@ -103,3 +103,50 @@ func (repo *ecovid19sysPersistence) GetInfoPersonByDate(numberOfDate int) ([]*en
 
 	return logs, err
 }
+
+func (repo *ecovid19sysPersistence) GetInfoPersonByID(personID string) (entity.ItemPersonLog, error) {
+	var log entity.ItemPersonLog
+
+	db, err := getDB()
+
+	if err != nil {
+		return log, err
+	}
+
+	err = db.Transaction(func(tx *gorm.DB) error {
+		rows, err := tx.Raw(
+			prepareQuery(
+				"CALL get_info_person_by_id",
+				personID,
+			),
+		).Rows()
+
+		if err != nil {
+			return err
+		}
+
+		defer rows.Close()
+
+		for rows.Next() {
+			err = rows.Scan(
+				&log.PersonID,
+				&log.PersonName,
+				&log.PersonPhone,
+				&log.PersonAddress,
+				&log.PersonYear,
+			)
+
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return log, err
+	}
+
+	return log, err
+}

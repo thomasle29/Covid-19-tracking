@@ -1,7 +1,7 @@
 package application
 
 type (
-	TrackingResult struct {
+	TrackingResultLog struct {
 		PersonID      string    `json:"person-id"`
 		PersonName    string    `json:"person-name"`
 		PersonPhone   string    `json:"person-phone"`
