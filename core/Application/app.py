@@ -3,5 +3,6 @@ import json
 def printJson(data):
     print(json)
 
-# def computeRelativeGraph(data):
+def computeRelativeGraph(data):
+    pass
     
