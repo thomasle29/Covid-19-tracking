@@ -43,5 +43,5 @@ func setup(router *gin.RouterGroup) {
 	router.GET("person/logs/:numberofdate", getInfoPersonByDate)
 
 	// Tracking
-	router.GET("tracking", getTrackingGraph)
+	router.POST("tracking", getTrackingGraph)
 }
