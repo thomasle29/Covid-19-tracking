@@ -8,7 +8,7 @@
 
 <mat-form-field>
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+    <input matInput (keyup)="applyFilter($event)" placeholder="name, phone, address, bird">
 </mat-form-field>
 
 <div class="table-container">
@@ -83,5 +83,5 @@
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
 
-    <!-- <mat-paginator [length]="100" [pageSize]="30"></mat-paginator> -->
+    <mat-paginator [pageSizeOptions]="[7, 14, 20]" showFirstLastButtons></mat-paginator>
 </div>

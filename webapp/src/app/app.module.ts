@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
 // import { FormControl, Validators } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -52,6 +53,7 @@ const appRoutes: Routes = [
       appRoutes,
       // { enableTracing: true } // <-- debugging purposes only
     ),
+    MatSidenavModule,
     MatSliderModule,
     MatToolbarModule,
     MatIconModule,

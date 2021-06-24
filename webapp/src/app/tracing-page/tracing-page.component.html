@@ -19,4 +19,140 @@
     <mat-error *ngIf="numberOfDate.invalid">{{getErrorMessageNumberOfDate()}}</mat-error>
 </mat-form-field>
 
-<button mat-raised-button color="primary">GO</button>
+<button (click)="getTracking()" mat-raised-button color="primary">GO</button>
+
+<br>
+
+<mat-form-field class="field-f0-filter" *ngIf="isValid">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="name, phone, address, bird">
+</mat-form-field>
+
+<div class="table-container" *ngIf="isValid">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+        <ng-container matColumnDef="trackingLogName">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.trackingLogName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="trackingLogPhone">
+            <th mat-header-cell *matHeaderCellDef> Phone </th>
+            <td mat-cell *matCellDef="let element"> {{element.trackingLogPhone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="trackingLogAddress">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.trackingLogAddress}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="trackingLogFNumber">
+            <th mat-header-cell *matHeaderCellDef> F </th>
+            <td mat-cell *matCellDef="let element"> {{element.trackingLogFNumber}} </td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayRow.length">
+                <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <img class="element-user-image" src="assets/images/user_default.jpg">
+                    <mat-list>
+                        <mat-list-item>
+                            <span mat-subheader>ID</span>
+                            <span>{{element.trackingLogID}}</span> &nbsp;
+                            <button [cdkCopyToClipboard]="element.trackingLogID" mat-icon-button aria-label="Copy">
+                            <mat-icon>file_copy</mat-icon>
+                        </button>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Name</span>
+                            <span>{{element.trackingLogName}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>F</span>
+                            <span>F{{element.trackingLogFNumber}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Phone</span>
+                            <span>{{element.trackingLogPhone}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Address</span>
+                            <span>{{element.trackingLogAddress}}</span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <span mat-subheader>Birthyear</span>
+                            <span>{{element.trackingLogYear}}</span>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayRow"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayRow;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[7, 14, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div class="page" *ngIf="isValid">
+    <ngx-graph 
+        [links]="links" 
+        [nodes]="nodes" 
+        [clusters]="clusters" 
+        [layout]="layout" 
+        [curve]="curve"
+        [draggingEnabled]="draggingEnabled" 
+        [panningEnabled]="panningEnabled" 
+        [enableZoom]="zoomEnabled"
+        [zoomSpeed]="zoomSpeed" 
+        [minZoomLevel]="minZoomLevel" 
+        [maxZoomLevel]="maxZoomLevel" 
+        [panOnZoom]="panOnZoom"
+        [autoZoom]="autoZoom" 
+        [autoCenter]="autoCenter"
+    >
+        <ng-template #defsTemplate>
+            <svg:marker viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+        </ng-template>
+
+        <ng-template #nodeTemplate let-node>
+            <svg:g class="node">
+                <svg:rect (click)="filterByGraph(node)" rx="10" ry="10" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height + 4"
+                    [attr.fill]="getColor(node)"/>
+                <svg:text font-size="1.5em" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height * 1/5 + 4">
+                    {{node.label}}
+                </svg:text>
+                <svg:text font-size="1.1em" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height * 4/5">
+                    {{node.data.address}}
+                </svg:text>
+                <svg:text font-size="1.4em" alignment-baseline="central" [attr.x]="node.dimension.width - 35" [attr.y]="node.dimension.height * 4/5 + 2">
+                    F{{node.data.fnumber}}
+                </svg:text>
+            </svg:g>
+        </ng-template>
+
+        <ng-template #linkTemplate let-link>
+            <svg:g class="edge">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+                </svg:path>
+                <!-- <svg:text class="edge-label" text-anchor="middle">
+                    <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline"
+                        startOffset="50%">
+                    {{link.label}}
+                    </textPath>
+                </svg:text> -->
+            </svg:g>
+        </ng-template>
+
+    </ngx-graph>
+</div>
