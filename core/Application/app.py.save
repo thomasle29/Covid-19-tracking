@@ -1,0 +1,32 @@
+import json
+
+def printJson(data):
+    print(json)
+
+def computeRelativeGraph(data):
+    # print(data)
+    # print(type(data))
+    # data = json.loads(data)
+
+    # print(data['person-id'])
+    # print(data['number-of-f'])
+    # print(data['person-relative']['relative-from'][0])
+
+    # test result
+    x = [
+        {
+            "person-id": "6c6b9747-c66a-11eb-9a1e-42010ab80002",
+            "person-f-number": 0,
+            "person-before": ["0"]
+        },
+        {
+            "person-id": "6c6c3efd-c66a-11eb-9a1e-42010ab80002",
+            "person-f-number": 1,
+            "person-before": ["", "2"]
+        }
+    ]
+
+    # convert into JSON:
+    y = json.dumps(x)
+    return y
+    
