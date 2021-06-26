@@ -1,12 +1,14 @@
 import json
 from os import X_OK
-from typing import List, final
+# from typing import List, final
 from domain.entity import *
 
 def to_Graph(J_str): # cover array to Graph List_obj  O(n)
     
     #f = open(J_name)
     data = json.loads(J_str)
+
+    # print(data)
 
     List_1 = data["relative-from"]
     List_2 = data["relative-to"]
