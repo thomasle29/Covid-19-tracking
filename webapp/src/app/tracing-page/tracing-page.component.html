@@ -28,8 +28,8 @@
     <input matInput (keyup)="applyFilter($event)" placeholder="name, phone, address, bird">
 </mat-form-field>
 
-<div class="table-container" *ngIf="isValid">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+<div class="table-container">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" *ngIf="isValid">
         <ng-container matColumnDef="trackingLogName">
             <th mat-header-cell *matHeaderCellDef> Name </th>
             <td mat-cell *matCellDef="let element"> {{element.trackingLogName}} </td>
@@ -118,6 +118,20 @@
         [panOnZoom]="panOnZoom"
         [autoZoom]="autoZoom" 
         [autoCenter]="autoCenter"
+        [showMiniMap]="true"
+        [layoutSettings]="{
+            orientation: 'LR',
+            marginX: 5,
+            marginY: 5,
+            edgePadding: 150,
+            rankPadding: 300,
+            nodePadding: 20,
+            multigraph: false,
+            ranker: 'longest-path',
+            compound: true,
+            align: 'UL',
+            acyclicer: 'greedy'
+        }"
     >
         <ng-template #defsTemplate>
             <svg:marker viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
@@ -127,7 +141,7 @@
 
         <ng-template #nodeTemplate let-node>
             <svg:g class="node">
-                <svg:rect (click)="filterByGraph(node)" rx="10" ry="10" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height + 4"
+                <svg:rect (dblclick)="filterByGraph(node)" rx="10" ry="10" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height + 4"
                     [attr.fill]="getColor(node)"/>
                 <svg:text font-size="1.5em" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height * 1/5 + 4">
                     {{node.label}}

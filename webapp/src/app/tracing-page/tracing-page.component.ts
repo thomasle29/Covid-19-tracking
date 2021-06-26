@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { TrackingLog } from '../services/tracking/tracking.model';
 import { TrackingService } from '../services/tracking/tracking.service';
@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import * as shape from 'd3-shape';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -25,7 +26,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class TracingPageComponent implements OnInit {
-  name = 'NGX-Graph Demo';
+  name = 'NGX-Graph';
 
   fcolors = FColors;
 
@@ -35,11 +36,12 @@ export class TracingPageComponent implements OnInit {
 
   links: Edge[] = [];
   
-  layout: String | Layout = 'dagreCluster';
+  layout: String | Layout = 'dagre';
 
   // line interpolation
-  curveType: string = 'Bundle';
+  curveType: string = 'Linear';
   curve: any = shape.curveLinear;
+  // curve: any = shape.curveBundle.beta(1);
   interpolationTypes = [
     'Bundle',
     'Cardinal',
@@ -53,7 +55,7 @@ export class TracingPageComponent implements OnInit {
     'Step Before'
   ];  
 
-  draggingEnabled: boolean = false;
+  draggingEnabled: boolean = true;
   panningEnabled: boolean = true;
   zoomEnabled: boolean = true;
 
@@ -110,6 +112,8 @@ export class TracingPageComponent implements OnInit {
     private snotify: SnotifyService,
   ) { }
 
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit(): void {
     this.setInterpolationType(this.curveType);
   }
@@ -162,6 +166,7 @@ export class TracingPageComponent implements OnInit {
     this.links = []
     let saveID: string[] = []
     for (let log of this.trackingLog) {
+      console.log(log.trackingLogFNumber)
       let color: string = FColors[log.trackingLogFNumber].color
 
       let node: Node = {
@@ -198,6 +203,8 @@ export class TracingPageComponent implements OnInit {
         saveID.push(linkID)
       }
     }
+    // console.log(this.nodes)
+    // console.log(this.links)
   }
 
   getTracking(): void {
@@ -208,10 +215,16 @@ export class TracingPageComponent implements OnInit {
         this.errorMessage = 'Cannot get detail visitor';
         return this.snotify.error(this.errorMessage, { timeout: 3000, position: SnotifyPosition.rightTop, });
       }
-      this.trackingLog = resp.data;
+      // this.trackingLog = resp.data;
+      // for (let log of this.trackingLog){
+      //   if (log.trackingLogFNumber == 2){
+      //     this.trackingLog[0].trackingLogBefore.push(log.trackingLogID)
+      //   }
+      // }
       this.dataSource = new MatTableDataSource(this.trackingLog);
+      this.dataSource.paginator = this.paginator;
       this.isValid = true;
-      console.log(this.trackingLog)
+      // console.log(this.trackingLog)
       this.setUpGraph()
     }, err => {
       this.isLoading = false;
@@ -223,5 +236,7 @@ export class TracingPageComponent implements OnInit {
 
   filterByGraph(node: Node): void{
     this.dataSource.filter = node.id.trim().toLowerCase();
+    this.dataSource.paginator.firstPage();
+    window.scrollTo(0, 0)
   }
 }
