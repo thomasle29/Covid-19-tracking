@@ -31,5 +31,17 @@ export const FColors : FColor[] = [
     {
         fNumber: 6,
         color: '#FCF3CF'
+    },
+    {
+        fNumber: 7,
+        color: '#BCE2EE'
+    },
+    {
+        fNumber: 8,
+        color: '#C6EEBC'
+    },
+    {
+        fNumber: 9,
+        color: '#EAEDED'
     }
 ]

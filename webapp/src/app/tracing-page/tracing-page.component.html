@@ -19,7 +19,8 @@
     <mat-error *ngIf="numberOfDate.invalid">{{getErrorMessageNumberOfDate()}}</mat-error>
 </mat-form-field>
 
-<button (click)="getTracking()" mat-raised-button color="primary">GO</button>
+<button *ngIf="!f0ID.invalid && !fNumber.invalid && !numberOfDate.invalid" (click)="getTracking()" mat-raised-button color="primary">GO</button>
+<button *ngIf="f0ID.invalid || fNumber.invalid || numberOfDate.invalid" (click)="getTracking()" mat-raised-button color="primary" disabled >GO</button>
 
 <br>
 
@@ -60,8 +61,8 @@
                             <span mat-subheader>ID</span>
                             <span>{{element.trackingLogID}}</span> &nbsp;
                             <button [cdkCopyToClipboard]="element.trackingLogID" mat-icon-button aria-label="Copy">
-                            <mat-icon>file_copy</mat-icon>
-                        </button>
+                                <mat-icon>file_copy</mat-icon>
+                            </button>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                         <mat-list-item>
@@ -72,6 +73,9 @@
                         <mat-list-item>
                             <span mat-subheader>F</span>
                             <span>F{{element.trackingLogFNumber}}</span>
+                            <button (click)="locationForGraph(element.trackingLogID)" mat-icon-button aria-label="location">
+                                <mat-icon>location_on</mat-icon>
+                            </button>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                         <mat-list-item>
@@ -114,11 +118,13 @@
         [enableZoom]="zoomEnabled"
         [zoomSpeed]="zoomSpeed" 
         [minZoomLevel]="minZoomLevel" 
-        [maxZoomLevel]="maxZoomLevel" 
+        [maxZoomLevel]="maxZoomLevel"
+        [zoomLevel]="zoomLevel"
         [panOnZoom]="panOnZoom"
         [autoZoom]="autoZoom" 
         [autoCenter]="autoCenter"
         [showMiniMap]="true"
+        [panToNode$]="panToNode$"
         [layoutSettings]="{
             orientation: 'LR',
             marginX: 5,
